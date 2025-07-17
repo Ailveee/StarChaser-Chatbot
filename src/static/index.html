@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarChaser - Solar System Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 80vh;
+            min-height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-section button,
+        .sample-questions div {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .upload-section button:hover,
+        .sample-questions div:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-section h3,
+        .sample-questions h4 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #764ba2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+
+        .message.bot .message-avatar {
+            background-color: #4ecdc4;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .message.bot .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 0.95rem;
+            resize: none;
+            min-height: 45px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .chat-input::placeholder {
+            color: #aaa;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            min-width: 80px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .file-input-label:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .status-message {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #4ecdc4;
+            animation: spin 1s ease-in-out infinite;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                height: 95vh;
+                min-height: unset;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                padding-bottom: 0;
+            }
+            .chat-messages {
+                padding-bottom: 10px;
+            }
+            .chat-input-container {
+                padding-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="Star Icon">
+                <h1>StarChaser</h1>
+            </div>
+
+            <div class="upload-section">
+                <h3>📚 Knowledge Base</h3>
+                <input type="file" id="pdfFile" class="file-input" accept=".pdf">
+                <label for="pdfFile" class="file-input-label">
+                    + Upload PDF
+                </label>
+                <button onclick="uploadPDF()">Upload & Process</button>
+                <button onclick="initializeDefault()">Use Default Knowledge</button>
+                <div id="uploadStatus"></div>
+            </div>
+
+            <div class="sample-questions">
+                <h4>💫 Sample Questions</h4>
+                <div onclick="askQuestion(\'What is the Solar system?\')">
+                    What is the Solar system?
+                </div>
+                <div onclick="askQuestion(\'How many planets are more?\')">
+                    How many planets are more?
+                </div>
+                <div onclick="askQuestion(\'Tell me about Mars\')">
+                    Tell me about Mars
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        Welcome to StarChaser! How can I assist you today?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Message"
+                        rows="1"
+                        onkeypress="handleKeyPress(event)"
+                    ></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isKnowledgeBaseReady = false;
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById(\'uploadStatus\');
+            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = \'\';
+            }, 5000);
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById(\'chatMessages\');
+            const messageDiv = document.createElement(\'div\');
+            messageDiv.className = `message ${isUser ? \'user\' : \'bot\'}`;
+            
+            const avatar = isUser ? \'👤\' : \'🤖\';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">${content}</div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addLoadingMessage() {
+            const messagesContainer = document.getElementById(\'chatMessages\');
+            const messageDiv = document.createElement(\'div\');
+            messageDiv.className = \'message bot\';
+            messageDiv.id = \'loadingMessage\';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <span class="loading"></span> Thinking...
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeLoadingMessage() {
+            const loadingMessage = document.getElementById(\'loadingMessage\');
+            if (loadingMessage) {
+                loadingMessage.remove();
+            }
+        }
+
+        async function uploadPDF() {
+            const fileInput = document.getElementById(\'pdfFile\');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus(\'Please select a PDF file first\', \'error\');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append(\'file\', file);
+
+            try {
+                showStatus(\'Uploading and processing PDF...\', \'success\');
+                
+                const response = await fetch(\'/api/upload-pdf\', {
+                    method: \'POST\',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.status === \'success\') {
+                    showStatus(`✅ ${result.message}`, \'success\');
+                    isKnowledgeBaseReady = true;
+                    addMessage(`📚 Knowledge base updated with "${result.filename}". You can now ask questions!`);
+                } else {
+                    showStatus(`❌ ${result.error}`, \'error\');
+                }
+            } catch (error) {
+                showStatus(`❌ Error uploading file: ${error.message}`, \'error\');
+            }
+        }
+
+        async function initializeDefault() {
+            try {
+                showStatus(\'Initializing default knowledge base...\', \'success\');
+                
+                const response = await fetch(\'/api/initialize-default\', {
+                    method: \'POST\',
+                    headers: {
+                        \'Content-Type\': \'application/json\'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.status === \'success\') {
+                    showStatus(\'✅ Default knowledge base ready!\', \'success\');
+                    isKnowledgeBaseReady = true;
+                    addMessage(\'🌌 Default solar system knowledge base is now active! Ask me anything about our solar system.\');
+                } else {
+                    showStatus(`❌ ${result.error}`, \'error\');
+                }
+            } catch (error) {
+                showStatus(`❌ Error initializing: ${error.message}`, \'error\');
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById(\'chatInput\');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, true); // Add user message
+            input.value = \'\'; // Clear input
+            addLoadingMessage(); // Show loading indicator
+
+            try {
+                const response = await fetch(\'/api/chat\', {
+                    method: \'POST\',
+                    headers: {
+                        \'Content-Type\': \'application/json\'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const result = await response.json();
+                removeLoadingMessage(); // Remove loading indicator
+
+                if (result.status === \'success\') {
+                    addMessage(result.response); // Add bot response
+                } else {
+                    addMessage(`Error: ${result.error}`, false); // Add error message
+                }
+            } catch (error) {
+                removeLoadingMessage(); // Remove loading indicator
+                addMessage(`Error communicating with the server: ${error.message}`, false);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === \'Enter\' && !event.shiftKey) {
+                event.preventDefault(); // Prevent new line
+                sendMessage();
+            }
+        }
+
+        // Initial check for knowledge base status
+        window.onload = async () => {
+            try {
+                const response = await fetch(\'/api/check-knowledge-base\');
+                const result = await response.json();
+                if (result.status === \'ready\') {
+                    isKnowledgeBaseReady = true;
+                    addMessage(\'Welcome back! Your knowledge base is ready. Ask me anything!\');
+                } else {
+                    addMessage(\'Hello! Please upload a PDF or use the default knowledge base to start.\');
+                }
+            } catch (error) {
+                console.error(\'Error checking knowledge base status:\', error);
+                addMessage(\'Hello! Please upload a PDF or use the default knowledge base to start.\');
+            }
+        };
+    </script>
+</body>
+</html>
+
