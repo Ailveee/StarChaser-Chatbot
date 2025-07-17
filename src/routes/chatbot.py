@@ -15,7 +15,7 @@ import fitz  # PyMuPDF
 chatbot_bp = Blueprint('chatbot', __name__)
 
 # Configure API key
-os.environ["GEMINI_API_KEY"] = "AIzaSyAU5xz5YO4_d-GXTFagwhn2TS1WNgtB950"
+os.environ["GEMINI_API_KEY"] = #Add your Gemini api key here
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Initialize embedding model
