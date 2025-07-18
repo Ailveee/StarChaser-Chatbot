@@ -11,140 +11,258 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+         body {
+              font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+              margin: 0;
+              position: relative;
+              overflow: hidden;
+              background: linear-gradient(
+                to right top,
+                #001022, #002046, #00306a, #00408e, #0050b2
+              );
+              background-size: 200% 200%;
+              background-position: 0% 50%;
+              animation: gradient 30s ease-in-out infinite;
+              color: #ffffff;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+              will-change: background-position;
+            }
+        
+            @keyframes gradient {
+              0%   { background-position: 0% 50%; }
+              50%  { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+        
+            /* Twinkling stars */
+            body::before {
+              content: "";
+              position: fixed;
+              inset: 0;
+              background-image:
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(white 1px, transparent 1px);
+              background-size: 20px 20px, 50px 50px;
+              opacity: 0.15;
+              animation: twinkle 5s infinite;
+              pointer-events: none;
+              z-index: -1;
+            }
+        
+            @keyframes twinkle {
+              0%, 100% { opacity: 0.12; }
+              50%      { opacity: 0.18; }
+            }
+        
+            /* Floating nebula */
+            body::after {
+              content: "";
+              position: fixed;
+              inset: 0;
+              background: url('https://example.com/nebula.png') center/cover no-repeat;
+              opacity: 0.2;
+              mix-blend-mode: screen;
+              filter: blur(30px);
+              animation: floatNebula 60s ease-in-out infinite;
+              pointer-events: none;
+              z-index: -1;
+            }
+        
+            @keyframes floatNebula {
+              0%   { transform: scale(1) translate(0, 0); }
+              50%  { transform: scale(1.05) translate(-5%, 5%); }
+              100% { transform: scale(1) translate(0, 0); }
+            }
+            
+            .header {
+              background: rgba(255, 255, 255, 0.1);
+              backdrop-filter: blur(10px);
+              padding: 1rem 2rem;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .header h1 {
+              font-size: 2.5rem;
+              background: linear-gradient(
+                to right top,
+                #f7ff00, #f2fb36, #ecf64e, #e8f261, #e3ed72, #d5ee7f, #c8ef8d,
+                #bdef9a, #a4f4ad, #8bf8c3, #73fada, #5ffbf1
+              );
+              background-clip: text;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              text-align: center;
+              margin-bottom: 0.5rem;
+              text-shadow:
+                0 0 5px rgba(255,255,255,0.6),
+                0 0 10px rgba(255,255,255,0.4);
+            }
+            .header p {
+              text-align: center;
+              color: #b0b0b0;
+              font-size: 1.1rem;
+            }
 
-        .main-container {
+        .container {
+            flex: 1;
             display: flex;
-            width: 100%;
             max-width: 1200px;
-            height: 80vh;
-            min-height: 600px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+            width: 100%;
         }
 
         .sidebar {
             width: 300px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 20px;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+        .sidebar h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
 
-        .logo img {
-            width: 40px;
-            height: 40px;
+        .upload-section {
+            margin-bottom: 2rem;
         }
 
-        .logo h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .upload-section button,
-        .sample-questions div {
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
             width: 100%;
-            padding: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 0.8rem;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            margin-bottom: 10px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .upload-section button:hover,
-        .sample-questions div:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .btn-secondary {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .upload-section h3,
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .sample-questions {
+            margin-top: 1rem;
+        }
+
         .sample-questions h4 {
             color: #4ecdc4;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .sample-question {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.6rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sample-question:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
         }
 
         .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 1.5rem;
             overflow-y: auto;
+            max-height: 500px;
         }
 
         .message {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.user {
-            justify-content: flex-end;
+            text-align: right;
         }
 
         .message.bot {
-            justify-content: flex-start;
-        }
-
-        .message-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #764ba2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            margin: 0 10px;
-            flex-shrink: 0;
-        }
-
-        .message.bot .message-avatar {
-            background-color: #4ecdc4;
+            text-align: left;
         }
 
         .message-content {
-            max-width: 70%;
-            padding: 12px 18px;
+            display: inline-block;
+            max-width: 80%;
+            padding: 1rem 1.5rem;
             border-radius: 20px;
-            font-size: 0.95rem;
-            line-height: 1.4;
+            position: relative;
         }
 
         .message.user .message-content {
@@ -155,33 +273,39 @@
         .message.bot .message-content {
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.3rem;
         }
 
         .chat-input-container {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(255, 255, 255, 0.02);
         }
 
         .chat-input-wrapper {
             display: flex;
-            gap: 10px;
-            align-items: center;
+            gap: 1rem;
+            align-items: flex-end;
         }
 
         .chat-input {
             flex: 1;
-            padding: 12px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-size: 0.95rem;
+            font-size: 1rem;
             resize: none;
-            min-height: 45px;
-            max-height: 100px;
-            overflow-y: auto;
+            min-height: 50px;
+            max-height: 120px;
+            backdrop-filter: blur(10px);
         }
 
         .chat-input::placeholder {
@@ -195,7 +319,7 @@
         }
 
         .send-btn {
-            padding: 12px 20px;
+            padding: 1rem 1.5rem;
             background: linear-gradient(45deg, #4ecdc4, #44a08d);
             color: white;
             border: none;
@@ -216,37 +340,12 @@
             cursor: not-allowed;
         }
 
-        .file-input-label {
-            display: block;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-
-        .file-input-label:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .file-input {
-            display: none;
-        }
-
         .status-message {
-            padding: 10px;
-            margin-top: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
             border-radius: 8px;
             text-align: center;
             font-weight: 500;
-            font-size: 0.9rem;
         }
 
         .status-success {
@@ -263,14 +362,12 @@
 
         .loading {
             display: inline-block;
-            width: 15px;
-            height: 15px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: #4ecdc4;
             animation: spin 1s ease-in-out infinite;
-            vertical-align: middle;
-            margin-right: 5px;
         }
 
         @keyframes spin {
@@ -278,55 +375,63 @@
         }
 
         @media (max-width: 768px) {
-            .main-container {
+            .container {
                 flex-direction: column;
-                height: 95vh;
-                min-height: unset;
+                padding: 1rem;
             }
+
             .sidebar {
                 width: 100%;
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-                padding-bottom: 0;
+                margin-bottom: 1rem;
             }
-            .chat-messages {
-                padding-bottom: 10px;
+
+            .header h1 {
+                font-size: 2rem;
             }
-            .chat-input-container {
-                padding-top: 10px;
+
+            .message-content {
+                max-width: 90%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="sidebar">
-            <div class="logo">
-                <img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="Star Icon">
-                <h1>StarChaser</h1>
-            </div>
+    <div class="header">
+        <h1>🚀StarChaser</h1>
+        <p>Your AI companion for exploring the wonders of our solar system</p>
+    </div>
 
+    <div class="container">
+        <div class="sidebar">
             <div class="upload-section">
                 <h3>📚 Knowledge Base</h3>
-                <input type="file" id="pdfFile" class="file-input" accept=".pdf">
-                <label for="pdfFile" class="file-input-label">
-                    + Upload PDF
-                </label>
-                <button onclick="uploadPDF()">Upload & Process</button>
-                <button onclick="initializeDefault()">Use Default Knowledge</button>
+                <div class="file-input-wrapper">
+                    <input type="file" id="pdfFile" class="file-input" accept=".pdf">
+                    <label for="pdfFile" class="file-input-label">
+                        📄 Upload PDF Document
+                    </label>
+                </div>
+                <button class="btn btn-primary" onclick="uploadPDF()">Upload & Process</button>
+                <button class="btn btn-secondary" onclick="initializeDefault()">Use Default Knowledge</button>
                 <div id="uploadStatus"></div>
             </div>
 
             <div class="sample-questions">
                 <h4>💫 Sample Questions</h4>
-                <div onclick="askQuestion(\'What is the Solar system?\')">
+                <div class="sample-question" onclick="askQuestion('What is the Solar system?')">
                     What is the Solar system?
                 </div>
-                <div onclick="askQuestion(\'How many planets are more?\')">
-                    How many planets are more?
+                <div class="sample-question" onclick="askQuestion('What happened to Pluto?')">
+                    What happened to Pluto?
                 </div>
-                <div onclick="askQuestion(\'Tell me about Mars\')">
-                    Tell me about Mars
+                <div class="sample-question" onclick="askQuestion('Tell me about black holes')">
+                    Tell me about black holes
+                </div>
+                <div class="sample-question" onclick="askQuestion('How many moons does Jupiter have?')">
+                    How many moons does Jupiter have?
+                </div>
+                <div class="sample-question" onclick="askQuestion('What makes Earth special?')">
+                    What makes Earth special?
                 </div>
             </div>
         </div>
@@ -334,24 +439,24 @@
         <div class="chat-container">
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    <div class="message-avatar">🤖</div>
                     <div class="message-content">
-                        Welcome to StarChaser! How can I assist you today?
+                        ✨ Hello! I'm StarChaser, your solar system expert. Upload a PDF document or use the default knowledge base to get started, then ask me anything about space!
                     </div>
+                    <div class="message-time">Just now</div>
                 </div>
             </div>
-            
+
             <div class="chat-input-container">
                 <div class="chat-input-wrapper">
-                    <textarea 
-                        id="chatInput" 
-                        class="chat-input" 
-                        placeholder="Message"
+                    <textarea
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="Write your question in here"
                         rows="1"
                         onkeypress="handleKeyPress(event)"
                     ></textarea>
                     <button class="send-btn" onclick="sendMessage()" id="sendBtn">
-                        →
+                        Send 🚀
                     </button>
                 </div>
             </div>
@@ -362,167 +467,190 @@
         let isKnowledgeBaseReady = false;
 
         function showStatus(message, type) {
-            const statusDiv = document.getElementById(\'uploadStatus\');
+            const statusDiv = document.getElementById('uploadStatus');
             statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
             setTimeout(() => {
-                statusDiv.innerHTML = \'\';
+                statusDiv.innerHTML = '';
             }, 5000);
         }
 
         function addMessage(content, isUser = false) {
-            const messagesContainer = document.getElementById(\'chatMessages\');
-            const messageDiv = document.createElement(\'div\');
-            messageDiv.className = `message ${isUser ? \'user\' : \'bot\'}`;
-            
-            const avatar = isUser ? \'👤\' : \'🤖\';
-            
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
             messageDiv.innerHTML = `
-                <div class="message-avatar">${avatar}</div>
                 <div class="message-content">${content}</div>
+                <div class="message-time">${timeString}</div>
             `;
-            
+
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
         function addLoadingMessage() {
-            const messagesContainer = document.getElementById(\'chatMessages\');
-            const messageDiv = document.createElement(\'div\');
-            messageDiv.className = \'message bot\';
-            messageDiv.id = \'loadingMessage\';
-            
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.id = 'loadingMessage';
+
             messageDiv.innerHTML = `
-                <div class="message-avatar">🤖</div>
                 <div class="message-content">
                     <span class="loading"></span> Thinking...
                 </div>
             `;
-            
+
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
         function removeLoadingMessage() {
-            const loadingMessage = document.getElementById(\'loadingMessage\');
+            const loadingMessage = document.getElementById('loadingMessage');
             if (loadingMessage) {
                 loadingMessage.remove();
             }
         }
 
         async function uploadPDF() {
-            const fileInput = document.getElementById(\'pdfFile\');
+            const fileInput = document.getElementById('pdfFile');
             const file = fileInput.files[0];
-            
+
             if (!file) {
-                showStatus(\'Please select a PDF file first\', \'error\');
+                showStatus('Please select a PDF file first', 'error');
                 return;
             }
 
             const formData = new FormData();
-            formData.append(\'file\', file);
+            formData.append('file', file);
 
             try {
-                showStatus(\'Uploading and processing PDF...\', \'success\');
-                
-                const response = await fetch(\'/api/upload-pdf\', {
-                    method: \'POST\',
+                showStatus('Uploading and processing PDF...', 'success');
+
+                const response = await fetch('/api/upload-pdf', {
+                    method: 'POST',
                     body: formData
                 });
 
                 const result = await response.json();
-                
-                if (result.status === \'success\') {
-                    showStatus(`✅ ${result.message}`, \'success\');
+
+                if (result.status === 'success') {
+                    showStatus(`✅ ${result.message}`, 'success');
                     isKnowledgeBaseReady = true;
                     addMessage(`📚 Knowledge base updated with "${result.filename}". You can now ask questions!`);
                 } else {
-                    showStatus(`❌ ${result.error}`, \'error\');
+                    showStatus(`❌ ${result.error}`, 'error');
                 }
             } catch (error) {
-                showStatus(`❌ Error uploading file: ${error.message}`, \'error\');
+                showStatus(`❌ Error uploading file: ${error.message}`, 'error');
             }
         }
 
         async function initializeDefault() {
             try {
-                showStatus(\'Initializing default knowledge base...\', \'success\');
-                
-                const response = await fetch(\'/api/initialize-default\', {
-                    method: \'POST\',
+                showStatus('Initializing default knowledge base...', 'success');
+
+                const response = await fetch('/api/initialize-default', {
+                    method: 'POST',
                     headers: {
-                        \'Content-Type\': \'application/json\'
+                        'Content-Type': 'application/json'
                     }
                 });
 
                 const result = await response.json();
-                
-                if (result.status === \'success\') {
-                    showStatus(\'✅ Default knowledge base ready!\', \'success\');
+
+                if (result.status === 'success') {
+                    showStatus('✅ Default knowledge base ready!', 'success');
                     isKnowledgeBaseReady = true;
-                    addMessage(\'🌌 Default solar system knowledge base is now active! Ask me anything about our solar system.\');
+                    addMessage('🌌 Default solar system knowledge base is now active! Ask me anything about our solar system.');
                 } else {
-                    showStatus(`❌ ${result.error}`, \'error\');
+                    showStatus(`❌ ${result.error}`, 'error');
                 }
             } catch (error) {
-                showStatus(`❌ Error initializing: ${error.message}`, \'error\');
+                showStatus(`❌ Error initializing: ${error.message}`, 'error');
             }
         }
 
         async function sendMessage() {
-            const input = document.getElementById(\'chatInput\');
-            const message = input.value.trim();
-            if (!message) return;
+            const input = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const question = input.value.trim();
 
-            addMessage(message, true); // Add user message
-            input.value = \'\'; // Clear input
-            addLoadingMessage(); // Show loading indicator
+            if (!question) return;
+
+            if (!isKnowledgeBaseReady) {
+                showStatus('Please initialize the knowledge base first', 'error');
+                return;
+            }
+
+            // Add user message
+            addMessage(question, true);
+            input.value = '';
+
+            // Disable input and button
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            // Add loading message
+            addLoadingMessage();
 
             try {
-                const response = await fetch(\'/api/chat\', {
-                    method: \'POST\',
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
                     headers: {
-                        \'Content-Type\': \'application/json\'
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ question })
                 });
 
                 const result = await response.json();
-                removeLoadingMessage(); // Remove loading indicator
 
-                if (result.status === \'success\') {
-                    addMessage(result.response); // Add bot response
+                // Remove loading message
+                removeLoadingMessage();
+
+                if (result.status === 'success') {
+                    addMessage(result.answer);
                 } else {
-                    addMessage(`Error: ${result.error}`, false); // Add error message
+                    addMessage(`❌ Error: ${result.error}`);
                 }
             } catch (error) {
-                removeLoadingMessage(); // Remove loading indicator
-                addMessage(`Error communicating with the server: ${error.message}`, false);
+                removeLoadingMessage();
+                addMessage(`❌ Error: ${error.message}`);
+            } finally {
+                // Re-enable input and button
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
             }
         }
 
+        function askQuestion(question) {
+            const input = document.getElementById('chatInput');
+            input.value = question;
+            sendMessage();
+        }
+
         function handleKeyPress(event) {
-            if (event.key === \'Enter\' && !event.shiftKey) {
-                event.preventDefault(); // Prevent new line
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
 
-        // Initial check for knowledge base status
-        window.onload = async () => {
-            try {
-                const response = await fetch(\'/api/check-knowledge-base\');
-                const result = await response.json();
-                if (result.status === \'ready\') {
-                    isKnowledgeBaseReady = true;
-                    addMessage(\'Welcome back! Your knowledge base is ready. Ask me anything!\');
-                } else {
-                    addMessage(\'Hello! Please upload a PDF or use the default knowledge base to start.\');
-                }
-            } catch (error) {
-                console.error(\'Error checking knowledge base status:\', error);
-                addMessage(\'Hello! Please upload a PDF or use the default knowledge base to start.\');
-            }
-        };
+        // Auto-resize textarea
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Initialize default knowledge base on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                initializeDefault();
+            }, 1000);
+        });
     </script>
 </body>
 </html>
